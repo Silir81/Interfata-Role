@@ -28,7 +28,7 @@ def update_value():
             item_values = selected_data_table.item(selected_item, 'values')
             selected_nr_intern_rola = item_values[0]
             selected_kg_rola = item_values[1]
-            initial_index = df[(df['Nr.InternRola'] == selected_nr_intern_rola) & (df['KG/Rola'] == selected_kg_rola)].index
+            initial_index = df[(df['Nr.InternRola'] == selected_nr_intern_rola) & (df['KG/Rola'] == float(selected_kg_rola))].index
             if len(initial_index) > 0:
                 # Get the first index if available
                 initial_index = initial_index[0]
@@ -36,6 +36,8 @@ def update_value():
                 display_selected_data(tambur_var.get())
 
         df.to_excel(r"C:\Users\User\Desktop\Stoc Role 2022.xlsx", index=False, columns=initial_headers)
+
+
 
 
 
