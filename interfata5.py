@@ -88,4 +88,4 @@ style.configure("Treeview.Heading", font=('Arial', 20, 'bold'))
 style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
 
 root.mainloop()
-
+# Versiune 2023/12/17 - 21.38
