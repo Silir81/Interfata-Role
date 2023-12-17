@@ -12,10 +12,7 @@ def display_selected_data(selected_tambur):
     selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG / Rola'] > 0)]
     if 'Nr. Intern Rola' in df.columns:
         selected_data_table.delete(*selected_data_table.get_children())
-        for index, row in selected_data[['Nr. Intern Rola', 'KG / Rola']].iterrows():
-            selected_data_table.insert("", tk.END, values=tuple(row))
-    else:
-        print("'Nr. Intern Rola' column not found in DataFrame")
+        for index, row in selected_data[['Nr. Intern Rola
 
 
 def update_value():

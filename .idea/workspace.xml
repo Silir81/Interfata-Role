@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdf63800-b5f7-46f0-8b04-54f4afe0bd9a" name="Changes" comment="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
-      <changelist_data name="Razvan" email="" />
+      <change beforePath="$PROJECT_DIR$/interfata4.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfata4.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,6 +88,15 @@
       <option name="presentableId" value="Default" />
       <updated>1702807063930</updated>
     </task>
+    <task id="LOCAL-00001" summary="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+      <option name="closed" value="true" />
+      <created>1702831318446</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1702831318446</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -101,7 +110,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="origin/master" />
                       </list>
                     </value>
                   </entry>
@@ -117,6 +126,8 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
+    <MESSAGE value="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
