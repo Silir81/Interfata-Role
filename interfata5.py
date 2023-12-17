@@ -5,23 +5,19 @@ import pandas as pd
 import os
 
 # Placeholder DataFrame
-df = pd.DataFrame({'Tambur': [], 'KG / Rola': [], 'New KG / Rola': []})
-
-# Placeholder for initial headers
+df = pd.DataFrame({'Tambur': [], 'KG/Rola': []})
 initial_headers = []
 
-# Function to display selected data
 def display_selected_data(selected_tambur):
     global df
-    selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG / Rola'] > 0)]
-    if 'Nr. Intern Rola' in df.columns:
+    selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG/Rola'] > 0)]
+    if 'Nr.InternRola' in df.columns:
         selected_data_table.delete(*selected_data_table.get_children())
-        for index, row in selected_data[['Nr. Intern Rola', 'KG / Rola']].iterrows():
+        for index, row in selected_data[['Nr.InternRola', 'KG/Rola']].iterrows():
             selected_data_table.insert("", tk.END, values=tuple(row))
     else:
-        print("'Nr. Intern Rola' column not found in DataFrame")
+        print("'Nr.InternRola' column not found in DataFrame")
 
-# Function to update values
 def update_value():
     global df
     selected_items = selected_data_table.selection()
@@ -30,25 +26,19 @@ def update_value():
         new_value = int(new_value)
         for selected_item in selected_items:
             item_values = selected_data_table.item(selected_item, 'values')
-            df.at[selected_item, 'KG / Rola'] = new_value
-            df.at[selected_item, 'New KG / Rola'] = new_value
-            display_selected_data(item_values[0])
+            selected_nr_intern_rola = item_values[0]
+            selected_kg_rola = item_values[1]
+            initial_index = df[(df['Nr.InternRola'] == selected_nr_intern_rola) & (df['KG/Rola'] == selected_kg_rola)].index
+            if len(initial_index) > 0:
+                # Get the first index if available
+                initial_index = initial_index[0]
+                df.loc[initial_index, 'KG/Rola'] = new_value
+                display_selected_data(tambur_var.get())
 
-        # Save the updated DataFrame with initial headers
         df.to_excel(r"C:\Users\User\Desktop\Stoc Role 2022.xlsx", index=False, columns=initial_headers)
 
-# Function to add values
-def add_value():
-    global df
-    new_value = new_kg_rola.get()
-    tambur = tambur_var.get()
-    if new_value.strip():
-        new_value = int(new_value)
-        new_row = pd.Series({'Tambur': tambur, 'KG / Rola': 0, 'New KG / Rola': new_value})
-        df = df.append(new_row, ignore_index=True)
-        display_selected_data(tambur)
 
-# Function to open Excel
+
 def open_excel():
     global df
     global initial_headers
@@ -64,17 +54,31 @@ def open_excel():
         tambur_dropdown.config(state="normal")
         tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))
 
-# Initial file path
 file_path = r"C:\Users\User\Desktop\Stoc Role 2022.xlsx"
-
-# Check if the file exists and write the initial DataFrame
-if os.path.exists(file_path):
+if os.path.exists(file_path) and not df.empty:
     df.to_excel(file_path, index=False)
 
 # GUI Setup
 root = tk.Tk()
 root.title("Excel Data Viewer")
-
-# Rest of the GUI setup...
+tambur_var = tk.StringVar(root)
+tambur_var.set('Select Tambur')
+tambur_dropdown = tk.OptionMenu(root, tambur_var, 'Select Tambur')
+tambur_dropdown.pack()
+btn_open_excel = tk.Button(root, text="Open Excel File", command=open_excel)
+btn_open_excel.pack()
+selected_data_table = ttk.Treeview(root, columns=('Nr.InternRola', 'KG/Rola'), show='headings')
+selected_data_table.heading('Nr.InternRola', text='Nr.InternRola')
+selected_data_table.heading('KG/Rola', text='KG/Rola')
+selected_data_table.pack(padx=20, pady=20)
+new_kg_rola = tk.StringVar(root)
+entry_value = tk.Entry(root, textvariable=new_kg_rola)
+entry_value.pack()
+update_btn = tk.Button(root, text="Update", command=update_value)
+update_btn.pack()
+style = ttk.Style(root)
+style.configure("Treeview", rowheight=25, font=('Arial', 10))
+style.configure("Treeview.Heading", font=('Arial', 10, 'bold'))
+style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
 
 root.mainloop()

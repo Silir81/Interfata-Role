@@ -31,15 +31,17 @@ def update_value():
         new_value = int(new_value)
         for selected_item in selected_items:
             item_values = selected_data_table.item(selected_item, 'values')
-            # Get the index of the initial row in the DataFrame
-            initial_index = df[df['Tambur'] == item_values[0]].index[0]
-            # Update the 'KG / Rola' column in the initial row with the new value
-            df.loc[initial_index, 'KG / Rola'] = new_value
-            df.loc[initial_index, 'New KG / Rola'] = new_value
-            display_selected_data(item_values[0])
+            selected_tambur = item_values[0]
+            initial_index = df[df['Tambur'] == selected_tambur].index
+            if len(initial_index) > 0:
+                # Get the first index if available
+                initial_index = initial_index[0]
+                df.loc[initial_index, 'KG / Rola'] = new_value
+                df.loc[initial_index, 'New KG / Rola'] = new_value
+                display_selected_data(selected_tambur)
 
-        # Save the updated DataFrame with initial headers
         df.to_excel(r"C:\Users\User\Desktop\Stoc Role 2022.xlsx", index=False, columns=initial_headers)
+
 
 
 # Function to add values
