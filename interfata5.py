@@ -72,6 +72,11 @@ selected_data_table = ttk.Treeview(root, columns=('Nr.InternRola', 'KG/Rola'), s
 selected_data_table.heading('Nr.InternRola', text='Nr.InternRola')
 selected_data_table.heading('KG/Rola', text='KG/Rola')
 selected_data_table.pack(padx=60, pady=60)
+
+# Add grid lines
+selected_data_table.tag_configure('oddrow', background='white')
+selected_data_table.tag_configure('evenrow', background='lightgray')
+
 new_kg_rola = tk.StringVar(root)
 entry_value = tk.Entry(root, textvariable=new_kg_rola)
 entry_value.pack()
@@ -80,6 +85,7 @@ update_btn.pack()
 style = ttk.Style(root)
 style.configure("Treeview", rowheight=25, font=('Arial', 15))
 style.configure("Treeview.Heading", font=('Arial', 20, 'bold'))
-style.layout("Treeview", [('Treeview.tree area', {'sticky': 'answer'})])
+style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
 
 root.mainloop()
+
