@@ -4,9 +4,14 @@ from tkinter import ttk
 import pandas as pd
 import os
 
+
 # Placeholder DataFrame
 df = pd.DataFrame({'Tambur': [], 'KG / Rola': [], 'New KG / Rola': []})
 
+# Placeholder for initial headers
+initial_headers = []
+
+# Function to display selected data
 def display_selected_data(selected_tambur):
     global df
     selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG / Rola'] > 0)]
@@ -14,7 +19,7 @@ def display_selected_data(selected_tambur):
         selected_data_table.delete(*selected_data_table.get_children())
         for index, row in selected_data[['Nr. Intern Rola
 
-
+# Function to update values
 def update_value():
     global df
     selected_items = selected_data_table.selection()
@@ -23,23 +28,14 @@ def update_value():
         new_value = int(new_value)
         for selected_item in selected_items:
             item_values = selected_data_table.item(selected_item, 'values')
-            df.at[selected_item, 'KG / Rola'] = new_value  # Replace 'KG / Rola' with the new value
+            df.at[selected_item, 'KG / Rola'] = new_value
             df.at[selected_item, 'New KG / Rola'] = new_value
             display_selected_data(item_values[0])
 
-        # Save the modified DataFrame back to the Excel file
-        if os.path.exists(file_path):
-            with pd.ExcelWriter(file_path, mode='a', engine='openpyxl', if_sheet_exists='replace') as writer:
-                df.to_excel(writer, index=False, header=False)
-        else:
-            print("The file does not exist.")
+        # Save the updated DataFrame with initial headers
+        df.to_excel(r"C:\Users\User\Desktop\Stoc Role 2022.xlsx", index=False, columns=initial_headers)
 
-# Rest of the code remains unchanged
-
-
-# Rest of the code remains unchanged
-
-
+# Function to add values
 def add_value():
     global df
     new_value = new_kg_rola.get()
@@ -50,16 +46,15 @@ def add_value():
         df = df.append(new_row, ignore_index=True)
         display_selected_data(tambur)
 
+# Function to open Excel
 def open_excel():
     global df
-    global tambur_dropdown
-
+    global initial_headers
     file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
     if file_path:
         df = pd.read_excel(file_path)
+        initial_headers = df.columns.tolist()  # Get the initial column headers
         tambur_options = df['Tambur'].unique().tolist()
-        print(tambur_options)  # Check the contents of tambur_options
-
         tambur_var.set('Select Tambur')
         tambur_dropdown['menu'].delete(0, 'end')
         for option in tambur_options:
@@ -67,11 +62,16 @@ def open_excel():
         tambur_dropdown.config(state="normal")
         tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))
 
-# Check if the Excel file exists
+# Initial file path
 file_path = r"C:\Users\User\Desktop\Stoc Role 2022.xlsx"
-if os.path.exists(file_path):
-    df = pd.read_excel(file_path)
 
+# Check if the file exists and write the initial DataFrame
+# Check if the file exists and write the initial DataFrame if it's not empty
+if os.path.exists(file_path) and not df.empty:
+    df.to_excel(file_path, index=False)
+
+
+# GUI Setup
 root = tk.Tk()
 root.title("Excel Data Viewer")
 
