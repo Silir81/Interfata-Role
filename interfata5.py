@@ -8,6 +8,7 @@ import os
 df = pd.DataFrame({'Tambur': [], 'KG/Rola': []})
 initial_headers = []
 
+
 def display_selected_data(selected_tambur):
     global df
     selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG/Rola'] > 0)]
@@ -17,6 +18,7 @@ def display_selected_data(selected_tambur):
             selected_data_table.insert("", tk.END, values=tuple(row))
     else:
         print("'Nr.InternRola' column not found in DataFrame")
+
 
 def update_value():
     global df
@@ -36,9 +38,6 @@ def update_value():
                 display_selected_data(tambur_var.get())
 
         df.to_excel(r"C:\Users\User\Desktop\Stoc Role 2022.xlsx", index=False, columns=initial_headers)
-
-
-
 
 
 def open_excel():
@@ -72,15 +71,15 @@ btn_open_excel.pack()
 selected_data_table = ttk.Treeview(root, columns=('Nr.InternRola', 'KG/Rola'), show='headings')
 selected_data_table.heading('Nr.InternRola', text='Nr.InternRola')
 selected_data_table.heading('KG/Rola', text='KG/Rola')
-selected_data_table.pack(padx=20, pady=20)
+selected_data_table.pack(padx=60, pady=60)
 new_kg_rola = tk.StringVar(root)
 entry_value = tk.Entry(root, textvariable=new_kg_rola)
 entry_value.pack()
 update_btn = tk.Button(root, text="Update", command=update_value)
 update_btn.pack()
 style = ttk.Style(root)
-style.configure("Treeview", rowheight=25, font=('Arial', 10))
-style.configure("Treeview.Heading", font=('Arial', 10, 'bold'))
-style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
+style.configure("Treeview", rowheight=25, font=('Arial', 15))
+style.configure("Treeview.Heading", font=('Arial', 20, 'bold'))
+style.layout("Treeview", [('Treeview.tree area', {'sticky': 'answer'})])
 
 root.mainloop()
