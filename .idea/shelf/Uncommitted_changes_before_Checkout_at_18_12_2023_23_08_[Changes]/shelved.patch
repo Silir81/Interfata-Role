@@ -1,0 +1,355 @@
+Index: interfata5.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import tkinter as tk\r\nfrom tkinter import filedialog\r\nfrom tkinter import ttk\r\nimport pandas as pd\r\nimport os\r\n\r\n# Placeholder DataFrame\r\ndf = pd.DataFrame({'Tambur': [], 'KG/Rola': []})\r\ninitial_headers = []\r\n\r\n\r\ndef display_selected_data(selected_tambur):\r\n    global df\r\n    selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG/Rola'] > 0)]\r\n    if 'Nr.InternRola' in df.columns:\r\n        selected_data_table.delete(*selected_data_table.get_children())\r\n        for index, row in selected_data[['Nr.InternRola', 'KG/Rola']].iterrows():\r\n            selected_data_table.insert(\"\", tk.END, values=tuple(row))\r\n    else:\r\n        print(\"'Nr.InternRola' column not found in DataFrame\")\r\n\r\n\r\ndef update_value():\r\n    global df\r\n    selected_items = selected_data_table.selection()\r\n    new_value = new_kg_rola.get()\r\n    if selected_items and new_value.strip():\r\n        new_value = int(new_value)\r\n        for selected_item in selected_items:\r\n            item_values = selected_data_table.item(selected_item, 'values')\r\n            selected_nr_intern_rola = item_values[0]\r\n            selected_kg_rola = item_values[1]\r\n            initial_index = df[(df['Nr.InternRola'] == selected_nr_intern_rola) & (df['KG/Rola'] == float(selected_kg_rola))].index\r\n            if len(initial_index) > 0:\r\n                # Get the first index if available\r\n                initial_index = initial_index[0]\r\n                df.loc[initial_index, 'KG/Rola'] = new_value\r\n                display_selected_data(tambur_var.get())\r\n\r\n        df.to_excel(r\"C:\\Users\\User\\Desktop\\Stoc Role 2022.xlsx\", index=False, columns=initial_headers)\r\n\r\n\r\ndef open_excel():\r\n    global df\r\n    global initial_headers\r\n    file_path = filedialog.askopenfilename(filetypes=[(\"Excel files\", \"*.xlsx;*.xls\")])\r\n    if file_path:\r\n        df = pd.read_excel(file_path)\r\n        initial_headers = df.columns.tolist()  # Get the initial column headers\r\n        tambur_options = df['Tambur'].unique().tolist()\r\n        tambur_var.set('Select Tambur')\r\n        tambur_dropdown['menu'].delete(0, 'end')\r\n        for option in tambur_options:\r\n            tambur_dropdown['menu'].add_command(label=option, command=tk._setit(tambur_var, option))\r\n        tambur_dropdown.config(state=\"normal\")\r\n        tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))\r\n\r\nfile_path = r\"C:\\Users\\User\\Desktop\\Stoc Role 2022.xlsx\"\r\nif os.path.exists(file_path) and not df.empty:\r\n    df.to_excel(file_path, index=False)\r\n\r\n# GUI Setup\r\nroot = tk.Tk()\r\nroot.title(\"Excel Data Viewer\")\r\ntambur_var = tk.StringVar(root)\r\ntambur_var.set('Select Tambur')\r\ntambur_dropdown = tk.OptionMenu(root, tambur_var, 'Select Tambur')\r\ntambur_dropdown.pack()\r\nbtn_open_excel = tk.Button(root, text=\"Open Excel File\", command=open_excel)\r\nbtn_open_excel.pack()\r\nselected_data_table = ttk.Treeview(root, columns=('Nr.InternRola', 'KG/Rola'), show='headings')\r\nselected_data_table.heading('Nr.InternRola', text='Nr.InternRola')\r\nselected_data_table.heading('KG/Rola', text='KG/Rola')\r\nselected_data_table.pack(padx=60, pady=60)\r\n\r\n# Add grid lines\r\nselected_data_table.tag_configure('oddrow', background='white')\r\nselected_data_table.tag_configure('evenrow', background='lightgray')\r\n\r\nnew_kg_rola = tk.StringVar(root)\r\nentry_value = tk.Entry(root, textvariable=new_kg_rola)\r\nentry_value.pack()\r\nupdate_btn = tk.Button(root, text=\"Update\", command=update_value)\r\nupdate_btn.pack()\r\nstyle = ttk.Style(root)\r\nstyle.configure(\"Treeview\", rowheight=25, font=('Arial', 15))\r\nstyle.configure(\"Treeview.Heading\", font=('Arial', 20, 'bold'))\r\nstyle.layout(\"Treeview\", [('Treeview.treearea', {'sticky': 'nswe'})])\r\n\r\nroot.mainloop()\r\n# Versiune 2023/12/17 - 21.38\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/interfata5.py b/interfata5.py
+--- a/interfata5.py	(revision ecdca49906225f3e533f62747e7bc461ddcb1bc8)
++++ b/interfata5.py	(date 1702933089899)
+@@ -62,12 +62,21 @@
+ # GUI Setup
+ root = tk.Tk()
+ root.title("Excel Data Viewer")
++btn_open_excel = tk.Button(root, text="Open Excel File", command=open_excel)
++btn_open_excel.pack()
+ tambur_var = tk.StringVar(root)
+ tambur_var.set('Select Tambur')
+ tambur_dropdown = tk.OptionMenu(root, tambur_var, 'Select Tambur')
+ tambur_dropdown.pack()
+-btn_open_excel = tk.Button(root, text="Open Excel File", command=open_excel)
+-btn_open_excel.pack()
++new_kg_rola = tk.StringVar(root)
++entry_value = tk.Entry(root, textvariable=new_kg_rola)
++entry_value.pack()
++
++
++update_btn = tk.Button(root, text="Update", command=update_value)
++update_btn.pack()
++
++
+ selected_data_table = ttk.Treeview(root, columns=('Nr.InternRola', 'KG/Rola'), show='headings')
+ selected_data_table.heading('Nr.InternRola', text='Nr.InternRola')
+ selected_data_table.heading('KG/Rola', text='KG/Rola')
+@@ -77,11 +86,7 @@
+ selected_data_table.tag_configure('oddrow', background='white')
+ selected_data_table.tag_configure('evenrow', background='lightgray')
+ 
+-new_kg_rola = tk.StringVar(root)
+-entry_value = tk.Entry(root, textvariable=new_kg_rola)
+-entry_value.pack()
+-update_btn = tk.Button(root, text="Update", command=update_value)
+-update_btn.pack()
++
+ style = ttk.Style(root)
+ style.configure("Treeview", rowheight=25, font=('Arial', 15))
+ style.configure("Treeview.Heading", font=('Arial', 20, 'bold'))
+Index: interfata7.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/interfata7.py b/interfata7.py
+new file mode 100644
+--- /dev/null	(date 1702926128488)
++++ b/interfata7.py	(date 1702926128488)
+@@ -0,0 +1,40 @@
++from msal import ConfidentialClientApplication
++from msgraph.core import GraphSession, Credential
++
++# Application (client) ID, tenant ID, and client secret from your AAD app
++CLIENT_ID = "95c8995b-9aa0-41b2-a714-7a3105b5d8dc"
++TENANT_ID = "8133ead4-1b34-4a4f-aab5-2f0cdf410e8c"
++CLIENT_SECRET = "71e38eec-0849-4803-b550-afd2404873c8"
++
++# SharePoint site URL and file path
++site_url = "https://mexiweb.sharepoint.com/sites/MF40"
++file_relative_url = "sites/MF40/Documente%20partajate/Stoc%20Role/Stoc%20Role%202022%20-%20Test.xlsx"
++
++# Build the authority URL
++authority_url = f"https://login.microsoftonline.com/{TENANT_ID}"
++
++# Create a confidential client application
++app = ConfidentialClientApplication(
++    client_id=CLIENT_ID,
++    authority=authority_url,
++    client_credential=CLIENT_SECRET
++)
++
++# Get the access token
++token_response = app.acquire_token_for_client(scopes=["https://graph.microsoft.com/.default"])
++access_token = token_response.get("access_token")
++
++# Initialize a Graph session with the access token
++credential = Credential(access_token=access_token)
++session = GraphSession(credential=credential)
++
++# Download the file content
++response = session.get(f"drives/b!m5wS1R46x0evVBt7lhBq5-Qs_FlpE2xEvRThEaKD65rYp5aXnZpSQ5Ngp-we3IN7/items/{item_id}/content")
++
++# Save the file locally
++if response.status_code == 200:
++    with open("local_file.xlsx", "wb") as file:
++        file.write(response.content)
++        print("File downloaded successfully.")
++else:
++    print("File download failed. Status code:", response.status_code)
+Index: interfata9.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/interfata9.py b/interfata9.py
+new file mode 100644
+--- /dev/null	(date 1702932530325)
++++ b/interfata9.py	(date 1702932530325)
+@@ -0,0 +1,114 @@
++import tkinter as tk
++from tkinter import filedialog
++from tkinter import ttk
++import pandas as pd
++import os
++
++# Placeholder DataFrame
++df = pd.DataFrame({'Tambur': [], 'KG/Rola': []})
++initial_headers = []
++
++
++def display_selected_data(selected_tambur):
++    global df
++    selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG/Rola'] > 0)]
++    if 'Nr.InternRola' in df.columns:
++        selected_data_table.delete(*selected_data_table.get_children())
++        for index, row in selected_data[['Nr.InternRola', 'KG/Rola']].iterrows():
++            selected_data_table.insert("", tk.END, values=tuple(row))
++    else:
++        print("'Nr.InternRola' column not found in DataFrame")
++
++
++def update_value():
++    global df
++    selected_items = selected_data_table.selection()
++    new_value = new_kg_rola.get()
++    if selected_items and new_value.strip():
++        new_value = int(new_value)
++        for selected_item in selected_items:
++            item_values = selected_data_table.item(selected_item, 'values')
++            selected_nr_intern_rola = item_values[0]
++            selected_kg_rola = item_values[1]
++            initial_index = df[(df['Nr.InternRola'] == selected_nr_intern_rola) & (df['KG/Rola'] == float(selected_kg_rola))].index
++            if len(initial_index) > 0:
++                # Get the first index if available
++                initial_index = initial_index[0]
++                df.loc[initial_index, 'KG/Rola'] = new_value
++                display_selected_data(tambur_var.get())
++
++        df.to_excel(r"C:\Users\User\Desktop\Stoc Role 2022.xlsx", index=False, columns=initial_headers)
++
++
++def open_excel():
++    global df
++    global initial_headers
++    file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
++    if file_path:
++        df = pd.read_excel(file_path)
++        initial_headers = df.columns.tolist()  # Get the initial column headers
++        tambur_options = df['Tambur'].unique().tolist()
++        tambur_var.set('Select Tambur')
++        tambur_dropdown['menu'].delete(0, 'end')
++        for option in tambur_options:
++            tambur_dropdown['menu'].add_command(label=option, command=tk._setit(tambur_var, option))
++        tambur_dropdown.config(state="normal")
++        tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))
++
++file_path = r"C:\Users\User\Desktop\Stoc Role 2022.xlsx"
++if os.path.exists(file_path) and not df.empty:
++    df.to_excel(file_path, index=False)
++
++# GUI Setup
++root = tk.Tk()
++root.title("Registru role")
++tambur_var = tk.StringVar(root)
++
++# Create a frame
++frame = tk.Frame(root)
++frame.pack()
++
++# Create a StringVar for the dropdown
++tambur_var = tk.StringVar(root)
++tambur_var.set('Select Tambur')
++
++# Create a Menubutton widget
++tambur_dropdown = tk.Menubutton(frame, textvariable=tambur_var, height=3, width=20)
++tambur_dropdown.grid(row=1, column=2)  # Place in column 0
++
++# Create a Menu widget
++menu = tk.Menu(tambur_dropdown, tearoff=False)
++tambur_dropdown.configure(menu=menu)
++
++btn_open_excel = tk.Button(frame, text="Deschide fisierul Excel", command=open_excel, height=3, width=20)
++btn_open_excel.grid(row=1, column=1)  # Place in column 1
++
++# tambur_dropdown = tk.OptionMenu(frame, tambur_var, 'Select Tambur', )
++# tambur_dropdown.grid(row=1, column=2)  # Place in column 2
++
++
++update_btn = tk.Button(frame, text="Update", command=update_value, height=3, width=20)
++update_btn.grid(row=1, column=3)  # Place in column 3
++
++
++new_kg_rola = tk.StringVar(root)
++entry_value = tk.Entry(root, textvariable=new_kg_rola)
++entry_value.pack()
++style = ttk.Style(root)
++style.configure("Treeview", rowheight=25, font=('Arial', 15))
++style.configure("Treeview.Heading", font=('Arial', 20, 'bold'))
++style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
++
++selected_data_table = ttk.Treeview(root, columns=('Nr.InternRola', 'KG/Rola'), show='headings')
++selected_data_table.heading('Nr.InternRola', text='Nr.InternRola')
++selected_data_table.heading('KG/Rola', text='KG/Rola')
++selected_data_table.pack(padx=60, pady=60)
++
++
++# Add grid lines
++selected_data_table.tag_configure('oddrow', background='green')
++selected_data_table.tag_configure('evenrow', background='lightgray')
++
++
++root.mainloop()
++# Versiune 2023/12/17 - 21.38
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"cdf63800-b5f7-46f0-8b04-54f4afe0bd9a\" name=\"Changes\" comment=\"initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;\">\r\n      <changelist_data name=\"Razvan\" email=\"\" />\r\n      <change afterPath=\"$PROJECT_DIR$/interfata6.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Changes.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/shelf/Changes.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PREVIOUS_COMMIT_AUTHORS\">\r\n      <list>\r\n        <option value=\"Razvan\" />\r\n      </list>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n    <option name=\"SIGN_OFF_COMMIT\" value=\"true\" />\r\n  </component>\r\n  <component name=\"ProblemsViewState\">\r\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 2\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2ZfJBJC81uM9iYzPPJtjv0QMVrX\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Python.interfata4.executor\": \"Run\",\r\n    \"Python.interfata5.executor\": \"Run\",\r\n    \"Python.interfata6.executor\": \"Run\",\r\n    \"Python.main.executor\": \"Run\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"git-widget-placeholder\": \"master\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"last_opened_file_path\": \"C:/PyCharm Community Edition 2023.2.2/Interfata-Role\",\r\n    \"settings.editor.selected.configurable\": \"org.jetbrains.plugins.github.ui.GithubSettingsConfigurable\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\PyCharm Community Edition 2023.2.2\\Interfata-Role\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"interfata5\" type=\"PythonConfigurationType\" factoryName=\"Python\" nameIsGenerated=\"true\">\r\n      <module name=\"Interfata Role\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"SDK_NAME\" value=\"Python 3.12 (ITS---Project1) (2)\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/interfata5.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"interfata6\" type=\"PythonConfigurationType\" factoryName=\"Python\" nameIsGenerated=\"true\">\r\n      <module name=\"Interfata Role\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"SDK_NAME\" value=\"Python 3.12 (ITS---Project1) (2)\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/interfata6.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"main\" type=\"PythonConfigurationType\" factoryName=\"Python\" nameIsGenerated=\"true\">\r\n      <module name=\"Interfata Role\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/main.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-python-sdk-7a29c1521ef0-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.11799.298\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"SvnConfiguration\">\r\n    <configuration>C:\\Users\\User\\AppData\\Roaming\\Subversion</configuration>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"cdf63800-b5f7-46f0-8b04-54f4afe0bd9a\" name=\"Changes\" comment=\"\" />\r\n      <created>1702807063930</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1702807063930</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State>\r\n              <option name=\"FILTERS\">\r\n                <map>\r\n                  <entry key=\"branch\">\r\n                    <value>\r\n                      <list>\r\n                        <option value=\"master\" />\r\n                      </list>\r\n                    </value>\r\n                  </entry>\r\n                </map>\r\n              </option>\r\n            </State>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <ignored-roots>\r\n      <path value=\"$PROJECT_DIR$\" />\r\n    </ignored-roots>\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" suspend=\"THREAD\" type=\"python-line\">\r\n          <url>file://$PROJECT_DIR$/main.py</url>\r\n          <line>8</line>\r\n          <option name=\"timeStamp\" value=\"1\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision ecdca49906225f3e533f62747e7bc461ddcb1bc8)
++++ b/.idea/workspace.xml	(date 1702932856252)
+@@ -6,11 +6,11 @@
+   <component name="ChangeListManager">
+     <list default="true" id="cdf63800-b5f7-46f0-8b04-54f4afe0bd9a" name="Changes" comment="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+       <changelist_data name="Razvan" email="" />
+-      <change afterPath="$PROJECT_DIR$/interfata6.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Changes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Changes.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/interfata7.py" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/interfata8.py" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/interfata9.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/interfata5.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfata5.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -22,9 +22,28 @@
+       <list>
+         <option value="Razvan" />
+       </list>
++    </option>
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="master" />
++      </map>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+     <option name="SIGN_OFF_COMMIT" value="true" />
++  </component>
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;,
++    &quot;assignee&quot;: &quot;Silir81&quot;
++  }
++}</component>
++  <component name="GithubPullRequestsUISettings">
++    <option name="selectedUrlAndAccountId">
++      <UrlAndAccount>
++        <option name="accountId" value="42bcb8ad-34be-46df-a2e0-8054e874cc5a" />
++        <option name="url" value="https://github.com/Silir81/Interfata-Role.git" />
++      </UrlAndAccount>
++    </option>
+   </component>
+   <component name="ProblemsViewState">
+     <option name="selectedTabId" value="CurrentFile" />
+@@ -40,20 +59,25 @@
+   </component>
+   <component name="PropertiesComponent"><![CDATA[{
+   "keyToString": {
++    "Python.__init__.executor": "Run",
+     "Python.interfata4.executor": "Run",
+     "Python.interfata5.executor": "Run",
+     "Python.interfata6.executor": "Run",
++    "Python.interfata7.executor": "Run",
++    "Python.interfata8.executor": "Run",
++    "Python.interfata9.executor": "Run",
+     "Python.main.executor": "Run",
+     "RunOnceActivity.OpenProjectViewOnStart": "true",
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+     "git-widget-placeholder": "master",
+     "ignore.virus.scanning.warn.message": "true",
+-    "last_opened_file_path": "C:/PyCharm Community Edition 2023.2.2/Interfata-Role",
++    "last_opened_file_path": "C:/PythonDemos/Interfata Role",
+     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+   }
+ }]]></component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
++      <recent name="C:\PythonDemos\Interfata Role" />
+       <recent name="C:\PyCharm Community Edition 2023.2.2\Interfata-Role" />
+     </key>
+   </component>
+@@ -67,7 +91,6 @@
+         <env name="PYTHONUNBUFFERED" value="1" />
+       </envs>
+       <option name="SDK_HOME" value="" />
+-      <option name="SDK_NAME" value="Python 3.12 (ITS---Project1) (2)" />
+       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+       <option name="IS_MODULE_SDK" value="false" />
+       <option name="ADD_CONTENT_ROOTS" value="true" />
+@@ -90,7 +113,6 @@
+         <env name="PYTHONUNBUFFERED" value="1" />
+       </envs>
+       <option name="SDK_HOME" value="" />
+-      <option name="SDK_NAME" value="Python 3.12 (ITS---Project1) (2)" />
+       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+       <option name="IS_MODULE_SDK" value="false" />
+       <option name="ADD_CONTENT_ROOTS" value="true" />
+Index: interfata8.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/interfata8.py b/interfata8.py
+new file mode 100644
+--- /dev/null	(date 1702927662274)
++++ b/interfata8.py	(date 1702927662274)
+@@ -0,0 +1,26 @@
++from office365.runtime.auth.authentication_context import AuthenticationContext
++from office365.sharepoint.client_context import ClientContext
++
++# SharePoint site URL
++site_url = 'https://mexiweb.sharepoint.com/sites/MF40'
++
++# Application (client) ID and client secret from your Azure AD app
++client_id = "95c8995b-9aa0-41b2-a714-7a3105b5d8dc"
++client_secret = "7Fq8Q~aidcruzEO96KLY642eNDvaT6Mh3TEQkbPr"
++
++# Create an authentication context
++context_auth = AuthenticationContext(url=site_url)
++
++# Acquire token for app
++context_auth.acquire_token_for_app(client_id=client_id, client_secret=client_secret)
++
++# Create a client context
++ctx = ClientContext(site_url, context_auth)
++
++# Load the web object
++web = ctx.web
++ctx.load(web)
++ctx.execute_query()
++
++# Print the web site title
++print("Web site title: {0}".format(web.properties['Title']))

@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdf63800-b5f7-46f0-8b04-54f4afe0bd9a" name="Changes" comment="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+    <list default="true" id="cdf63800-b5f7-46f0-8b04-54f4afe0bd9a" name="Changes" comment="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfata4.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfata4.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfata5.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfata5.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,16 +41,67 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.interfata4.executor": "Run",
+    "Python.interfata5.executor": "Run",
+    "Python.interfata6.executor": "Run",
     "Python.main.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "Dev",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/PythonDemos/Interfata Role",
+    "last_opened_file_path": "C:/PyCharm Community Edition 2023.2.2/Interfata-Role",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\PyCharm Community Edition 2023.2.2\Interfata-Role" />
+    </key>
+  </component>
   <component name="RunManager">
+    <configuration name="interfata5" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="Interfata Role" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/interfata5.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="interfata6" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="Interfata Role" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/interfata6.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Interfata Role" />
       <option name="ENV_FILES" value="" />
@@ -95,23 +144,15 @@
       <option name="presentableId" value="Default" />
       <updated>1702807063930</updated>
     </task>
-    <task id="LOCAL-00001" summary="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+    <task id="LOCAL-00001" summary="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
       <option name="closed" value="true" />
-      <created>1702831318446</created>
+      <created>1702933794387</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1702831318446</updated>
+      <updated>1702933794387</updated>
     </task>
-    <task id="LOCAL-00002" summary="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
-      <option name="closed" value="true" />
-      <created>1702831673345</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1702831673345</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -141,8 +182,8 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
+    <MESSAGE value="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
