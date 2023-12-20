@@ -1,0 +1,417 @@
+Index: interfata5.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import tkinter as tk\r\nfrom tkinter import filedialog\r\nfrom tkinter import ttk\r\nimport pandas as pd\r\nimport os\r\n\r\n# Placeholder DataFrame\r\ndf = pd.DataFrame({'Tambur': [], 'KG/Rola': [], 'Grosime': []})\r\ninitial_headers = []\r\n\r\ndef display_selected_data(selected_tambur):\r\n    global df\r\n    selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG/Rola'] > 0)]\r\n    if 'Nr.InternRola' in df.columns:\r\n        selected_data_table.delete(*selected_data_table.get_children())\r\n        for index, row in selected_data[['Nr.InternRola', 'KG/Rola']].iterrows():\r\n            selected_data_table.insert(\"\", tk.END, values=tuple(row))\r\n    else:\r\n        print(\"'Nr.InternRola' column not found in DataFrame\")\r\n\r\ndef update_tambur_options(selected_grosime):\r\n    global df\r\n    tambur_options = df[df['Grosime'] == selected_grosime]['Tambur'].unique().tolist()\r\n    tambur_var.set('Select Tambur')\r\n    menu_tambur.delete(0, 'end')  # Correct deletion of menu items\r\n    for option in tambur_options:\r\n        menu_tambur.add_command(label=option, command=tk._setit(tambur_var, option))\r\n\r\ndef update_value():\r\n    global df\r\n    selected_items = selected_data_table.selection()\r\n    new_value = new_kg_rola.get()\r\n    if selected_items and new_value.strip():\r\n        new_value = int(new_value)\r\n        for selected_item in selected_items:\r\n            item_values = selected_data_table.item(selected_item, 'values')\r\n            selected_nr_intern_rola = item_values[0]\r\n            selected_kg_rola = item_values[1]\r\n            initial_index = df[(df['Nr.InternRola'] == selected_nr_intern_rola) & (df['KG/Rola'] == float(selected_kg_rola))].index\r\n            if len(initial_index) > 0:\r\n                initial_index = initial_index[0]\r\n                df.loc[initial_index, 'KG/Rola'] = new_value\r\n                display_selected_data(tambur_var.get())\r\n        df.to_excel(r\"C:\\Users\\User\\Desktop\\Stoc Role 2022.xlsx\", index=False, columns=initial_headers)\r\n\r\ndef open_excel():\r\n    global df, initial_headers\r\n    file_path = filedialog.askopenfilename(filetypes=[(\"Excel files\", \"*.xlsx;*.xls\")])\r\n    if file_path:\r\n        df = pd.read_excel(file_path)\r\n        initial_headers = df.columns.tolist()\r\n        grosime_options = df['Grosime'].unique().tolist()\r\n        grosime_var.set('Select Grosime')\r\n        menu_grosime.delete(0, 'end')  # Correct deletion of menu items\r\n        for option in grosime_options:\r\n            menu_grosime.add_command(label=str(option), command=tk._setit(grosime_var, str(option)))\r\n        grosime_dropdown.config(state=\"normal\")\r\n        grosime_var.trace('w', lambda *args: filter_data(grosime_var.get()))\r\n\r\ndef filter_data(selected_grosime):\r\n    global df\r\n    if selected_grosime != 'Select Grosime':\r\n        filtered_df = df[df['Grosime'] == selected_grosime]\r\n        tambur_options = filtered_df['Tambur'].unique().tolist()\r\n        tambur_var.set('Select Tambur')\r\n        menu_tambur.delete(0, 'end')  # Correct deletion of menu items\r\n        for option in tambur_options:\r\n            menu_tambur.add_command(label=str(option), command=tk._setit(tambur_var, str(option)))\r\n        tambur_dropdown.config(state=\"normal\")\r\n        tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))\r\n\r\n\r\nfile_path = r\"C:\\Users\\User\\Desktop\\Stoc Role 2022.xlsx\"\r\nif os.path.exists(file_path) and not df.empty:\r\n    df.to_excel(file_path, index=False)\r\n\r\n# GUI Setup (update here to include filtering by Grosime)\r\nroot = tk.Tk()\r\nroot.title(\"Registru role\")\r\n\r\nframe = tk.Frame(root)\r\nframe.pack()\r\n\r\ngrosime_var = tk.StringVar(root)\r\ngrosime_var.set('Select Grosime')\r\ngrosime_dropdown = tk.Menubutton(frame, textvariable=grosime_var, width=20)\r\ngrosime_dropdown.grid(row=0, column=0)\r\n\r\ntambur_var = tk.StringVar(root)\r\ntambur_var.set('Select Tambur')\r\ntambur_dropdown = tk.Menubutton(frame, textvariable=tambur_var, width=20)\r\ntambur_dropdown.grid(row=0, column=1)\r\n\r\nmenu_grosime = tk.Menu(grosime_dropdown, tearoff=False)\r\ngrosime_dropdown.configure(menu=menu_grosime)\r\n\r\nmenu_tambur = tk.Menu(tambur_dropdown, tearoff=False)\r\ntambur_dropdown.configure(menu=menu_tambur)\r\n\r\nbtn_open_excel = tk.Button(frame, text=\"Deschide fisierul Excel\", command=open_excel, height=3, width=20)\r\nbtn_open_excel.grid(row=1, column=0)\r\n\r\nupdate_btn = tk.Button(frame, text=\"Update\", command=update_value, height=3, width=20)\r\nupdate_btn.grid(row=1, column=1)\r\n\r\nnew_kg_rola = tk.StringVar(root)\r\nentry_value = tk.Entry(root, textvariable=new_kg_rola)\r\nentry_value.pack()\r\n\r\nstyle = ttk.Style(root)\r\nstyle.configure(\"Treeview\", rowheight=25, font=('Arial', 15))\r\nstyle.configure(\"Treeview.Heading\", font=('Arial', 20, 'bold'))\r\nstyle.layout(\"Treeview\", [('Treeview.treearea', {'sticky': 'nswe'})])\r\n\r\nselected_data_table = ttk.Treeview(root, columns=('Nr.InternRola', 'KG/Rola'), show='headings')\r\nselected_data_table.heading('Nr.InternRola', text='Nr.InternRola')\r\nselected_data_table.heading('KG/Rola', text='KG/Rola')\r\nselected_data_table.pack(padx=60, pady=60)\r\n\r\nselected_data_table.tag_configure('oddrow', background='green')\r\nselected_data_table.tag_configure('evenrow', background='lightgray')\r\n\r\nroot.mainloop()
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/interfata5.py b/interfata5.py
+--- a/interfata5.py	(revision 9c42650dfb97ec365b614ef98ff81ff72552198f)
++++ b/interfata5.py	(date 1703100901493)
+@@ -1,123 +1,0 @@
+-import tkinter as tk
+-from tkinter import filedialog
+-from tkinter import ttk
+-import pandas as pd
+-import os
+-
+-# Placeholder DataFrame
+-df = pd.DataFrame({'Tambur': [], 'KG/Rola': [], 'Grosime': []})
+-initial_headers = []
+-
+-def display_selected_data(selected_tambur):
+-    global df
+-    selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG/Rola'] > 0)]
+-    if 'Nr.InternRola' in df.columns:
+-        selected_data_table.delete(*selected_data_table.get_children())
+-        for index, row in selected_data[['Nr.InternRola', 'KG/Rola']].iterrows():
+-            selected_data_table.insert("", tk.END, values=tuple(row))
+-    else:
+-        print("'Nr.InternRola' column not found in DataFrame")
+-
+-def update_tambur_options(selected_grosime):
+-    global df
+-    tambur_options = df[df['Grosime'] == selected_grosime]['Tambur'].unique().tolist()
+-    tambur_var.set('Select Tambur')
+-    menu_tambur.delete(0, 'end')  # Correct deletion of menu items
+-    for option in tambur_options:
+-        menu_tambur.add_command(label=option, command=tk._setit(tambur_var, option))
+-
+-def update_value():
+-    global df
+-    selected_items = selected_data_table.selection()
+-    new_value = new_kg_rola.get()
+-    if selected_items and new_value.strip():
+-        new_value = int(new_value)
+-        for selected_item in selected_items:
+-            item_values = selected_data_table.item(selected_item, 'values')
+-            selected_nr_intern_rola = item_values[0]
+-            selected_kg_rola = item_values[1]
+-            initial_index = df[(df['Nr.InternRola'] == selected_nr_intern_rola) & (df['KG/Rola'] == float(selected_kg_rola))].index
+-            if len(initial_index) > 0:
+-                initial_index = initial_index[0]
+-                df.loc[initial_index, 'KG/Rola'] = new_value
+-                display_selected_data(tambur_var.get())
+-        df.to_excel(r"C:\Users\User\Desktop\Stoc Role 2022.xlsx", index=False, columns=initial_headers)
+-
+-def open_excel():
+-    global df, initial_headers
+-    file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
+-    if file_path:
+-        df = pd.read_excel(file_path)
+-        initial_headers = df.columns.tolist()
+-        grosime_options = df['Grosime'].unique().tolist()
+-        grosime_var.set('Select Grosime')
+-        menu_grosime.delete(0, 'end')  # Correct deletion of menu items
+-        for option in grosime_options:
+-            menu_grosime.add_command(label=str(option), command=tk._setit(grosime_var, str(option)))
+-        grosime_dropdown.config(state="normal")
+-        grosime_var.trace('w', lambda *args: filter_data(grosime_var.get()))
+-
+-def filter_data(selected_grosime):
+-    global df
+-    if selected_grosime != 'Select Grosime':
+-        filtered_df = df[df['Grosime'] == selected_grosime]
+-        tambur_options = filtered_df['Tambur'].unique().tolist()
+-        tambur_var.set('Select Tambur')
+-        menu_tambur.delete(0, 'end')  # Correct deletion of menu items
+-        for option in tambur_options:
+-            menu_tambur.add_command(label=str(option), command=tk._setit(tambur_var, str(option)))
+-        tambur_dropdown.config(state="normal")
+-        tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))
+-
+-
+-file_path = r"C:\Users\User\Desktop\Stoc Role 2022.xlsx"
+-if os.path.exists(file_path) and not df.empty:
+-    df.to_excel(file_path, index=False)
+-
+-# GUI Setup (update here to include filtering by Grosime)
+-root = tk.Tk()
+-root.title("Registru role")
+-
+-frame = tk.Frame(root)
+-frame.pack()
+-
+-grosime_var = tk.StringVar(root)
+-grosime_var.set('Select Grosime')
+-grosime_dropdown = tk.Menubutton(frame, textvariable=grosime_var, width=20)
+-grosime_dropdown.grid(row=0, column=0)
+-
+-tambur_var = tk.StringVar(root)
+-tambur_var.set('Select Tambur')
+-tambur_dropdown = tk.Menubutton(frame, textvariable=tambur_var, width=20)
+-tambur_dropdown.grid(row=0, column=1)
+-
+-menu_grosime = tk.Menu(grosime_dropdown, tearoff=False)
+-grosime_dropdown.configure(menu=menu_grosime)
+-
+-menu_tambur = tk.Menu(tambur_dropdown, tearoff=False)
+-tambur_dropdown.configure(menu=menu_tambur)
+-
+-btn_open_excel = tk.Button(frame, text="Deschide fisierul Excel", command=open_excel, height=3, width=20)
+-btn_open_excel.grid(row=1, column=0)
+-
+-update_btn = tk.Button(frame, text="Update", command=update_value, height=3, width=20)
+-update_btn.grid(row=1, column=1)
+-
+-new_kg_rola = tk.StringVar(root)
+-entry_value = tk.Entry(root, textvariable=new_kg_rola)
+-entry_value.pack()
+-
+-style = ttk.Style(root)
+-style.configure("Treeview", rowheight=25, font=('Arial', 15))
+-style.configure("Treeview.Heading", font=('Arial', 20, 'bold'))
+-style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
+-
+-selected_data_table = ttk.Treeview(root, columns=('Nr.InternRola', 'KG/Rola'), show='headings')
+-selected_data_table.heading('Nr.InternRola', text='Nr.InternRola')
+-selected_data_table.heading('KG/Rola', text='KG/Rola')
+-selected_data_table.pack(padx=60, pady=60)
+-
+-selected_data_table.tag_configure('oddrow', background='green')
+-selected_data_table.tag_configure('evenrow', background='lightgray')
+-
+-root.mainloop()
+\ No newline at end of file
+Index: interfata4.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import tkinter as tk\r\nfrom tkinter import filedialog\r\nfrom tkinter import ttk\r\nimport pandas as pd\r\nimport os\r\n\r\n\r\n# Placeholder DataFrame\r\ndf = pd.DataFrame({'Tambur': [], 'KG / Rola': [], 'New KG / Rola': []})\r\n\r\n# Placeholder for initial headers\r\ninitial_headers = []\r\n\r\n# Function to display selected data\r\ndef display_selected_data(selected_tambur):\r\n    global df\r\n    selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG / Rola'] > 0)]\r\n    if 'Nr. Intern Rola' in df.columns:\r\n        selected_data_table.delete(*selected_data_table.get_children())\r\n        for index, row in selected_data[['Nr. Intern Rola', 'KG / Rola']].iterrows():\r\n            selected_data_table.insert(\"\", tk.END, values=tuple(row))\r\n    else:\r\n        print(\"'Nr. Intern Rola' column not found in DataFrame\")\r\n\r\n# Function to update values\r\ndef update_value():\r\n    global df\r\n    selected_items = selected_data_table.selection()\r\n    new_value = new_kg_rola.get()\r\n    if selected_items and new_value.strip():\r\n        new_value = int(new_value)\r\n        for selected_item in selected_items:\r\n            item_values = selected_data_table.item(selected_item, 'values')\r\n            selected_tambur = item_values[0]\r\n            initial_index = df[df['Tambur'] == selected_tambur].index\r\n            if len(initial_index) > 0:\r\n                # Get the first index if available\r\n                initial_index = initial_index[0]\r\n                df.loc[initial_index, 'KG / Rola'] = new_value\r\n                df.loc[initial_index, 'New KG / Rola'] = new_value\r\n                display_selected_data(selected_tambur)\r\n\r\n        df.to_excel(r\"C:\\Users\\User\\Desktop\\Stoc Role 2022.xlsx\", index=False, columns=initial_headers)\r\n\r\n\r\n\r\n# Function to add values\r\ndef add_value():\r\n    global df\r\n    new_value = new_kg_rola.get()\r\n    tambur = tambur_var.get()\r\n    if new_value.strip():\r\n        new_value = int(new_value)\r\n        new_row = pd.Series({'Tambur': tambur, 'KG / Rola': 0, 'New KG / Rola': new_value})\r\n        df = df.append(new_row, ignore_index=True)\r\n        display_selected_data(tambur)\r\n\r\n# Function to open Excel\r\ndef open_excel():\r\n    global df\r\n    global initial_headers\r\n    file_path = filedialog.askopenfilename(filetypes=[(\"Excel files\", \"*.xlsx;*.xls\")])\r\n    if file_path:\r\n        df = pd.read_excel(file_path)\r\n        initial_headers = df.columns.tolist()  # Get the initial column headers\r\n        tambur_options = df['Tambur'].unique().tolist()\r\n        tambur_var.set('Select Tambur')\r\n        tambur_dropdown['menu'].delete(0, 'end')\r\n        for option in tambur_options:\r\n            tambur_dropdown['menu'].add_command(label=option, command=tk._setit(tambur_var, option))\r\n        tambur_dropdown.config(state=\"normal\")\r\n        tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))\r\n\r\n# Initial file path\r\nfile_path = r\"C:\\Users\\User\\Desktop\\Stoc Role 2022.xlsx\"\r\n\r\n# Check if the file exists and write the initial DataFrame\r\n# Check if the file exists and write the initial DataFrame if it's not empty\r\nif os.path.exists(file_path) and not df.empty:\r\n    df.to_excel(file_path, index=False)\r\n\r\n\r\n# GUI Setup\r\nroot = tk.Tk()\r\nroot.title(\"Excel Data Viewer\")\r\n\r\ntambur_var = tk.StringVar(root)\r\ntambur_var.set('Select Tambur')\r\ntambur_dropdown = tk.OptionMenu(root, tambur_var, 'Select Tambur')\r\ntambur_dropdown.pack()\r\n\r\nbtn_open_excel = tk.Button(root, text=\"Open Excel File\", command=open_excel)\r\nbtn_open_excel.pack()\r\n\r\nselected_data_table = ttk.Treeview(root, columns=('Nr. Intern Rola', 'KG / Rola', 'New KG / Rola'), show='headings')\r\nselected_data_table.heading('Nr. Intern Rola', text='Nr. Intern Rola')\r\nselected_data_table.heading('KG / Rola', text='KG / Rola')\r\nselected_data_table.heading('New KG / Rola', text='New KG / Rola')\r\nselected_data_table.pack(padx=20, pady=20)\r\n\r\nnew_kg_rola = tk.StringVar(root)\r\nentry_value = tk.Entry(root, textvariable=new_kg_rola)\r\nentry_value.pack()\r\n\r\nupdate_btn = tk.Button(root, text=\"Update\", command=update_value)\r\nupdate_btn.pack()\r\n\r\nadd_btn = tk.Button(root, text=\"Add\", command=add_value)\r\nadd_btn.pack()\r\n\r\nstyle = ttk.Style(root)\r\nstyle.configure(\"Treeview\", rowheight=25, font=('Arial', 10))\r\nstyle.configure(\"Treeview.Heading\", font=('Arial', 10, 'bold'))\r\nstyle.layout(\"Treeview\", [('Treeview.treearea', {'sticky': 'nswe'})])\r\n\r\nroot.mainloop()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/interfata4.py b/interfata4.py
+--- a/interfata4.py	(revision 9c42650dfb97ec365b614ef98ff81ff72552198f)
++++ b/interfata4.py	(date 1703100901498)
+@@ -1,116 +1,0 @@
+-import tkinter as tk
+-from tkinter import filedialog
+-from tkinter import ttk
+-import pandas as pd
+-import os
+-
+-
+-# Placeholder DataFrame
+-df = pd.DataFrame({'Tambur': [], 'KG / Rola': [], 'New KG / Rola': []})
+-
+-# Placeholder for initial headers
+-initial_headers = []
+-
+-# Function to display selected data
+-def display_selected_data(selected_tambur):
+-    global df
+-    selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG / Rola'] > 0)]
+-    if 'Nr. Intern Rola' in df.columns:
+-        selected_data_table.delete(*selected_data_table.get_children())
+-        for index, row in selected_data[['Nr. Intern Rola', 'KG / Rola']].iterrows():
+-            selected_data_table.insert("", tk.END, values=tuple(row))
+-    else:
+-        print("'Nr. Intern Rola' column not found in DataFrame")
+-
+-# Function to update values
+-def update_value():
+-    global df
+-    selected_items = selected_data_table.selection()
+-    new_value = new_kg_rola.get()
+-    if selected_items and new_value.strip():
+-        new_value = int(new_value)
+-        for selected_item in selected_items:
+-            item_values = selected_data_table.item(selected_item, 'values')
+-            selected_tambur = item_values[0]
+-            initial_index = df[df['Tambur'] == selected_tambur].index
+-            if len(initial_index) > 0:
+-                # Get the first index if available
+-                initial_index = initial_index[0]
+-                df.loc[initial_index, 'KG / Rola'] = new_value
+-                df.loc[initial_index, 'New KG / Rola'] = new_value
+-                display_selected_data(selected_tambur)
+-
+-        df.to_excel(r"C:\Users\User\Desktop\Stoc Role 2022.xlsx", index=False, columns=initial_headers)
+-
+-
+-
+-# Function to add values
+-def add_value():
+-    global df
+-    new_value = new_kg_rola.get()
+-    tambur = tambur_var.get()
+-    if new_value.strip():
+-        new_value = int(new_value)
+-        new_row = pd.Series({'Tambur': tambur, 'KG / Rola': 0, 'New KG / Rola': new_value})
+-        df = df.append(new_row, ignore_index=True)
+-        display_selected_data(tambur)
+-
+-# Function to open Excel
+-def open_excel():
+-    global df
+-    global initial_headers
+-    file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
+-    if file_path:
+-        df = pd.read_excel(file_path)
+-        initial_headers = df.columns.tolist()  # Get the initial column headers
+-        tambur_options = df['Tambur'].unique().tolist()
+-        tambur_var.set('Select Tambur')
+-        tambur_dropdown['menu'].delete(0, 'end')
+-        for option in tambur_options:
+-            tambur_dropdown['menu'].add_command(label=option, command=tk._setit(tambur_var, option))
+-        tambur_dropdown.config(state="normal")
+-        tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))
+-
+-# Initial file path
+-file_path = r"C:\Users\User\Desktop\Stoc Role 2022.xlsx"
+-
+-# Check if the file exists and write the initial DataFrame
+-# Check if the file exists and write the initial DataFrame if it's not empty
+-if os.path.exists(file_path) and not df.empty:
+-    df.to_excel(file_path, index=False)
+-
+-
+-# GUI Setup
+-root = tk.Tk()
+-root.title("Excel Data Viewer")
+-
+-tambur_var = tk.StringVar(root)
+-tambur_var.set('Select Tambur')
+-tambur_dropdown = tk.OptionMenu(root, tambur_var, 'Select Tambur')
+-tambur_dropdown.pack()
+-
+-btn_open_excel = tk.Button(root, text="Open Excel File", command=open_excel)
+-btn_open_excel.pack()
+-
+-selected_data_table = ttk.Treeview(root, columns=('Nr. Intern Rola', 'KG / Rola', 'New KG / Rola'), show='headings')
+-selected_data_table.heading('Nr. Intern Rola', text='Nr. Intern Rola')
+-selected_data_table.heading('KG / Rola', text='KG / Rola')
+-selected_data_table.heading('New KG / Rola', text='New KG / Rola')
+-selected_data_table.pack(padx=20, pady=20)
+-
+-new_kg_rola = tk.StringVar(root)
+-entry_value = tk.Entry(root, textvariable=new_kg_rola)
+-entry_value.pack()
+-
+-update_btn = tk.Button(root, text="Update", command=update_value)
+-update_btn.pack()
+-
+-add_btn = tk.Button(root, text="Add", command=add_value)
+-add_btn.pack()
+-
+-style = ttk.Style(root)
+-style.configure("Treeview", rowheight=25, font=('Arial', 10))
+-style.configure("Treeview.Heading", font=('Arial', 10, 'bold'))
+-style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
+-
+-root.mainloop()
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># This is a sample Python script.\r\n\r\n# Press Shift+F10 to execute it or replace it with your code.\r\n# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.\r\n\r\n\r\ndef print_hi(name):\r\n    # Use a breakpoint in the code line below to debug your script.\r\n    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.\r\n\r\n\r\n# Press the green button in the gutter to run the script.\r\nif __name__ == '__main__':\r\n    print_hi('PyCharm')\r\n\r\n# See PyCharm help at https://www.jetbrains.com/help/pycharm/\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision 9c42650dfb97ec365b614ef98ff81ff72552198f)
++++ b/main.py	(date 1703100901503)
+@@ -1,16 +1,0 @@
+-# This is a sample Python script.
+-
+-# Press Shift+F10 to execute it or replace it with your code.
+-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+-
+-
+-def print_hi(name):
+-    # Use a breakpoint in the code line below to debug your script.
+-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+-
+-
+-# Press the green button in the gutter to run the script.
+-if __name__ == '__main__':
+-    print_hi('PyCharm')
+-
+-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"cdf63800-b5f7-46f0-8b04-54f4afe0bd9a\" name=\"Changes\" comment=\"2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;\">\r\n      <change afterPath=\"$PROJECT_DIR$/test.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/interfata5.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/interfata5.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PREVIOUS_COMMIT_AUTHORS\">\r\n      <list>\r\n        <option value=\"Razvan\" />\r\n      </list>\r\n    </option>\r\n    <option name=\"PUSH_AUTO_UPDATE\" value=\"true\" />\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n    <option name=\"SIGN_OFF_COMMIT\" value=\"true\" />\r\n  </component>\r\n  <component name=\"ProblemsViewState\">\r\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 2\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2ZfJBJC81uM9iYzPPJtjv0QMVrX\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Python.interfata4.executor\": \"Run\",\r\n    \"Python.interfata5.executor\": \"Run\",\r\n    \"Python.interfata6.executor\": \"Run\",\r\n    \"Python.main.executor\": \"Run\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"git-widget-placeholder\": \"Dev\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"last_opened_file_path\": \"C:/PyCharm Community Edition 2023.2.2/Interfata-Role\",\r\n    \"settings.editor.selected.configurable\": \"org.jetbrains.plugins.github.ui.GithubSettingsConfigurable\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\PyCharm Community Edition 2023.2.2\\Interfata-Role\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Python.interfata5\">\r\n    <configuration name=\"interfata5\" type=\"PythonConfigurationType\" factoryName=\"Python\" nameIsGenerated=\"true\">\r\n      <module name=\"Interfata Role\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/interfata5.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"interfata6\" type=\"PythonConfigurationType\" factoryName=\"Python\" nameIsGenerated=\"true\">\r\n      <module name=\"Interfata Role\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/interfata6.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"main\" type=\"PythonConfigurationType\" factoryName=\"Python\" nameIsGenerated=\"true\">\r\n      <module name=\"Interfata Role\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/main.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-python-sdk-7a29c1521ef0-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.11799.298\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"SvnConfiguration\">\r\n    <configuration>C:\\Users\\User\\AppData\\Roaming\\Subversion</configuration>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"cdf63800-b5f7-46f0-8b04-54f4afe0bd9a\" name=\"Changes\" comment=\"\" />\r\n      <created>1702807063930</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1702807063930</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1702933794387</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1702933794387</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1702934030655</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1702934030655</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State>\r\n              <option name=\"FILTERS\">\r\n                <map>\r\n                  <entry key=\"branch\">\r\n                    <value>\r\n                      <list>\r\n                        <option value=\"Dev\" />\r\n                      </list>\r\n                    </value>\r\n                  </entry>\r\n                </map>\r\n              </option>\r\n            </State>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <ignored-roots>\r\n      <path value=\"$PROJECT_DIR$\" />\r\n    </ignored-roots>\r\n    <MESSAGE value=\"2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" suspend=\"THREAD\" type=\"python-line\">\r\n          <url>file://$PROJECT_DIR$/main.py</url>\r\n          <line>8</line>\r\n          <option name=\"timeStamp\" value=\"1\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 9c42650dfb97ec365b614ef98ff81ff72552198f)
++++ b/.idea/workspace.xml	(date 1703100888236)
+@@ -4,35 +4,25 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="cdf63800-b5f7-46f0-8b04-54f4afe0bd9a" name="Changes" comment="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+-      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
++    <list default="true" id="cdf63800-b5f7-46f0-8b04-54f4afe0bd9a" name="Changes" comment="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
++      <changelist_data name="Razvan" email="" />
++      <change afterPath="$PROJECT_DIR$/interfata6.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Changes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Changes.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/interfata5.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfata5.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
+-  <component name="FileTemplateManagerImpl">
+-    <option name="RECENT_TEMPLATES">
+-      <list>
+-        <option value="Python Script" />
+-      </list>
+-    </option>
+-  </component>
+   <component name="Git.Settings">
+     <option name="PREVIOUS_COMMIT_AUTHORS">
+       <list>
+         <option value="Razvan" />
+       </list>
+     </option>
+-    <option name="PUSH_AUTO_UPDATE" value="true" />
+-    <option name="RECENT_BRANCH_BY_REPOSITORY">
+-      <map>
+-        <entry key="$PROJECT_DIR$" value="master" />
+-      </map>
+-    </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+     <option name="SIGN_OFF_COMMIT" value="true" />
+   </component>
+@@ -56,7 +46,7 @@
+     "Python.main.executor": "Run",
+     "RunOnceActivity.OpenProjectViewOnStart": "true",
+     "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "git-widget-placeholder": "Dev",
++    "git-widget-placeholder": "master",
+     "ignore.virus.scanning.warn.message": "true",
+     "last_opened_file_path": "C:/PyCharm Community Edition 2023.2.2/Interfata-Role",
+     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+@@ -67,7 +57,7 @@
+       <recent name="C:\PyCharm Community Edition 2023.2.2\Interfata-Role" />
+     </key>
+   </component>
+-  <component name="RunManager" selected="Python.interfata5">
++  <component name="RunManager">
+     <configuration name="interfata5" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+       <module name="Interfata Role" />
+       <option name="ENV_FILES" value="" />
+@@ -77,6 +67,7 @@
+         <env name="PYTHONUNBUFFERED" value="1" />
+       </envs>
+       <option name="SDK_HOME" value="" />
++      <option name="SDK_NAME" value="Python 3.12 (ITS---Project1) (2)" />
+       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+       <option name="IS_MODULE_SDK" value="false" />
+       <option name="ADD_CONTENT_ROOTS" value="true" />
+@@ -99,6 +90,7 @@
+         <env name="PYTHONUNBUFFERED" value="1" />
+       </envs>
+       <option name="SDK_HOME" value="" />
++      <option name="SDK_NAME" value="Python 3.12 (ITS---Project1) (2)" />
+       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+       <option name="IS_MODULE_SDK" value="false" />
+       <option name="ADD_CONTENT_ROOTS" value="true" />
+@@ -154,23 +146,6 @@
+       <option name="presentableId" value="Default" />
+       <updated>1702807063930</updated>
+     </task>
+-    <task id="LOCAL-00001" summary="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+-      <option name="closed" value="true" />
+-      <created>1702933794387</created>
+-      <option name="number" value="00001" />
+-      <option name="presentableId" value="LOCAL-00001" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1702933794387</updated>
+-    </task>
+-    <task id="LOCAL-00002" summary="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+-      <option name="closed" value="true" />
+-      <created>1702934030655</created>
+-      <option name="number" value="00002" />
+-      <option name="presentableId" value="LOCAL-00002" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1702934030655</updated>
+-    </task>
+-    <option name="localTasksCounter" value="3" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -184,7 +159,7 @@
+                   <entry key="branch">
+                     <value>
+                       <list>
+-                        <option value="Dev" />
++                        <option value="master" />
+                       </list>
+                     </value>
+                   </entry>
+@@ -200,8 +175,6 @@
+     <ignored-roots>
+       <path value="$PROJECT_DIR$" />
+     </ignored-roots>
+-    <MESSAGE value="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
+-    <option name="LAST_COMMIT_MESSAGE" value="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
+   </component>
+   <component name="XDebuggerManager">
+     <breakpoint-manager>
