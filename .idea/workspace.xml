@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdf63800-b5f7-46f0-8b04-54f4afe0bd9a" name="Changes" comment="2023/12/19 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
-      <changelist_data name="Razvan" email="" />
-      <change afterPath="$PROJECT_DIR$/Interfata Role/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Interfata Role.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Interfata Role.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" afterDir="false" />
+    <list default="true" id="cdf63800-b5f7-46f0-8b04-54f4afe0bd9a" name="Changes" comment="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Stoc Role 2022.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Interfata Role/Stoc Role 2022.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfata4.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interfata Role/interfata4.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfata5.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interfata Role/interfata5.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfata6.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interfata Role/interfata6.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interfata Role/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interfata5.py" beforeDir="false" afterPath="$PROJECT_DIR$/interfata5.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +26,12 @@
       <list>
         <option value="Razvan" />
       </list>
+    </option>
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="SIGN_OFF_COMMIT" value="true" />
@@ -57,7 +56,7 @@
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Dev&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/PyCharm Community Edition 2023.2.2/Interfata-Role&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
@@ -67,12 +66,8 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\PyCharm Community Edition 2023.2.2\Interfata-Role" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\PythonDemos\Interfata Role\Interfata Role1" />
-      <recent name="C:\PythonDemos\Interfata Role\Interfata Role" />
-    </key>
   </component>
-  <component name="RunManager" selected="Python.interfata5">
+  <component name="RunManager">
     <configuration name="interfata5" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Interfata Role" />
       <option name="ENV_FILES" value="" />
@@ -159,6 +154,23 @@
       <option name="presentableId" value="Default" />
       <updated>1702807063930</updated>
     </task>
+    <task id="LOCAL-00001" summary="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+      <option name="closed" value="true" />
+      <created>1702933794387</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1702933794387</updated>
+    </task>
+    <task id="LOCAL-00002" summary="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+      <option name="closed" value="true" />
+      <created>1702934030655</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1702934030655</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -172,7 +184,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="Dev" />
                       </list>
                     </value>
                   </entry>
@@ -188,12 +200,14 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
+    <MESSAGE value="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="2023/12/18 - Interface changes &#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Interfata Role/main.py</url>
+          <url>file://$PROJECT_DIR$/main.py</url>
           <line>8</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
