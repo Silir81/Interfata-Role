@@ -43,14 +43,19 @@ def update_value():
             item_values = selected_data_table.item(selected_item, 'values')
             selected_nr_intern_rola = item_values[0]
             selected_kg_rola = item_values[1]
-            initial_index = df[(df['Nr.InternRola'] == selected_nr_intern_rola) & (df['KG/Rola'] == float(selected_kg_rola))].index
+            initial_index = df[
+                (df['Nr.InternRola'] == selected_nr_intern_rola) & (df['KG/Rola'] == float(selected_kg_rola))].index
             if len(initial_index) > 0:
                 initial_index = initial_index[0]
                 df.loc[initial_index, 'KG/Rola'] = new_value
                 display_selected_data(tambur_var.get())
 
-        df.to_excel(r"C:\Users\User\Mexi Web Project\Documente Vanzari - Documents\Stoc Role 2022.xlsx",
-                    index=False, columns=initial_headers)
+        df.to_excel(r"C:\Users\User\Mexi Web Project\Documente Vanzari - Documents\Stoc Role 2022.xlsx", index=False,
+                    columns=initial_headers)
+
+        # Clear the entry field after updating
+        new_kg_rola.set("")
+
 
 # Function to open Excel
 def open_excel():
@@ -60,13 +65,17 @@ def open_excel():
     if file_path:
         df = pd.read_excel(file_path)
         initial_headers = df.columns.tolist()
-        tambur_options = df['Tambur'].unique().tolist()
+
+        # Get unique 'Tambur' values and sort them
+        tambur_options = sorted(df['Tambur'].unique().tolist())
+
         tambur_var.set('Select Tambur')
         tambur_dropdown['menu'].delete(0, 'end')
         for option in tambur_options:
             tambur_dropdown['menu'].add_command(label=option, command=tk._setit(tambur_var, option))
         tambur_dropdown.config(state="normal")
         tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))
+
 
 def save_to_excel():
     global df_rebut
@@ -119,10 +128,9 @@ notebook.pack(pady=10, expand=True)
 
 # Create a frame for the existing content
 existing_content_frame = ttk.Frame(notebook)
-notebook.add(existing_content_frame, text='Existing Content')
+notebook.add(existing_content_frame, text='Registru Role')
 
 # Add existing widgets to existing_content_frame
-# ...
 # Move your existing widgets to this frame
 btn_open_excel = tk.Button(existing_content_frame, text="Deschide Registrul Role", command=open_excel, height=2, width=20, bg='green', font=('Calibri', 12))
 btn_open_excel.pack()

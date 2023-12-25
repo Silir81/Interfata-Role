@@ -4,14 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="daffc50c-72a1-4aff-9ae9-78a369752b3a" name="Changes" comment="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Interfata Role/Interfata8.py" afterDir="false" />
+    <list default="true" id="daffc50c-72a1-4aff-9ae9-78a369752b3a" name="Changes" comment="V 8.0 - 2023.12.24&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+      <change afterPath="$PROJECT_DIR$/Interfata Role/Interfata10.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Interfata Role/Interfata9.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Interfata Role/SP Access 1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Interfata Role/SP Access.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interfata Role/Interfata8.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interfata Role/Interfata8.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -30,9 +41,9 @@
       </UrlAndAccount>
     </option>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2ZzqhK6lfZHG4mqqr7IQwg47NGw" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -41,11 +52,17 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.Interfata10.executor": "Run",
     "Python.Interfata8.executor": "Run",
+    "Python.Interfata9.executor": "Run",
+    "Python.SP Access 1.executor": "Run",
+    "Python.SP Access.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/PythonDemos/Interfata Role/Interfata Role"
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/PythonDemos/Interfata Role/Interfata Role",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -56,7 +73,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-7a29c1521ef0-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.11799.298" />
+        <option value="bundled-python-sdk-50da183f06c8-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13135.95" />
       </set>
     </attachedChunks>
   </component>
@@ -69,6 +86,23 @@
       <option name="presentableId" value="Default" />
       <updated>1703435376957</updated>
     </task>
+    <task id="LOCAL-00001" summary="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+      <option name="closed" value="true" />
+      <created>1703444296563</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1703444296563</updated>
+    </task>
+    <task id="LOCAL-00002" summary="V 8.0 - 2023.12.24&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;">
+      <option name="closed" value="true" />
+      <created>1703444370268</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1703444370268</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -84,6 +118,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial commit&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
+    <MESSAGE value="V 8.0 - 2023.12.24&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="V 8.0 - 2023.12.24&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
   </component>
 </project>
