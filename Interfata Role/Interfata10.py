@@ -27,7 +27,7 @@ def display_selected_data(selected_tambur):
     selected_data = df[(df['Tambur'] == selected_tambur) & (df['KG/Rola'] > 0)]
     if not selected_data.empty:
         selected_data_table.delete(*selected_data_table.get_children())
-        for index, row in selected_data[['Nr.InternRola', 'KG/Rola']].iterrows():
+        for index, row in selected_data[['Nr.InternRola', 'KG/Rola', 'Grosime']].iterrows():
             selected_data_table.insert("", tk.END, values=tuple(row))
     else:
         print(f"No data found for '{selected_tambur}'")
@@ -117,6 +117,8 @@ def save_to_excel():
     for field in field_names:
         entries[field].set("")
 
+def new_button_action():
+    print("New Button clicked!")
 
 # GUI Setup
 root = tk.Tk()
@@ -134,6 +136,9 @@ notebook.add(existing_content_frame, text='Registru Role')
 # Move your existing widgets to this frame
 btn_open_excel = tk.Button(existing_content_frame, text="Deschide Registrul Role", command=open_excel, height=2, width=20, bg='green', font=('Calibri', 12))
 btn_open_excel.pack()
+new_button = tk.Button(existing_content_frame, text="New Button", command=new_button_action, height=2, width=20, bg='blue', font=('Calibri', 12))
+new_button.pack(pady=10)  # Adjust pady as needed for spacing
+
 
 tambur_var = tk.StringVar(existing_content_frame)
 tambur_var.set('Select Tambur')
@@ -148,9 +153,10 @@ entry_value.pack()
 update_btn = tk.Button(existing_content_frame, text="Update", command=update_value, height=2, width=20, bg='green', font=('Calibri', 12))
 update_btn.pack()
 
-selected_data_table = ttk.Treeview(existing_content_frame, columns=('Nr.InternRola', 'KG/Rola'), show='headings')
+selected_data_table = ttk.Treeview(existing_content_frame, columns=('Nr.InternRola', 'KG/Rola', 'Grosime'), show='headings')
 selected_data_table.heading('Nr.InternRola', text='Nr.InternRola')
 selected_data_table.heading('KG/Rola', text='KG/Rola')
+selected_data_table.heading('Grosime', text='Grosime')
 selected_data_table.pack(padx=60, pady=60)
 
 style = ttk.Style(existing_content_frame)
