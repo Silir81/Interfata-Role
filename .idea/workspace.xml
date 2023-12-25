@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="daffc50c-72a1-4aff-9ae9-78a369752b3a" name="Changes" comment="Merge remote-tracking branch 'origin/master'">
+    <list default="true" id="daffc50c-72a1-4aff-9ae9-78a369752b3a" name="Changes" comment="2023/12/25 - V10.0 - Varianta functionala">
+      <change afterPath="$PROJECT_DIR$/Interfata Role/Interfata11.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Interfata Role/Interfata10.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interfata Role/Interfata10.py" afterDir="false" />
     </list>
@@ -50,6 +51,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.Interfata10.executor": "Run",
+    "Python.Interfata11.executor": "Run",
     "Python.Interfata8.executor": "Run",
     "Python.Interfata9.executor": "Run",
     "Python.SP Access 1.executor": "Run",
@@ -123,7 +125,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703532213494</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="2023/12/25 - V10.0 - Varianta functionala">
+      <option name="closed" value="true" />
+      <created>1703533143851</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1703533143851</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -137,7 +147,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="origin/master" />
                       </list>
                     </value>
                   </entry>
@@ -155,6 +165,7 @@
     <MESSAGE value="2023.12.25 - V 10.0 - Varianta functionala&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
     <MESSAGE value="2023/12/25 - V 10.0 - Varianta functionala&#10;&#10;Signed-off-by: Razvan Viorel Silisteanu &lt;razvan@mexi.ro&gt;" />
     <MESSAGE value="Merge remote-tracking branch 'origin/master'" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/master'" />
+    <MESSAGE value="2023/12/25 - V10.0 - Varianta functionala" />
+    <option name="LAST_COMMIT_MESSAGE" value="2023/12/25 - V10.0 - Varianta functionala" />
   </component>
 </project>
