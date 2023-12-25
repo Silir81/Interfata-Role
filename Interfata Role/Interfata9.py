@@ -3,6 +3,61 @@ from tkinter import filedialog, ttk
 import pandas as pd
 import os
 
+import requests
+from requests_oauthlib import OAuth2Session
+from oauthlib.oauth2 import BackendApplicationClient
+
+# Function to get an access token
+def get_access_token(client_id, client_secret, tenant_id):
+    token_url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
+    scope = ["https://graph.microsoft.com/.default"]
+
+    client = BackendApplicationClient(client_id=client_id)
+    oauth = OAuth2Session(client=client)
+    token = oauth.fetch_token(token_url=token_url, client_id=client_id,
+                              client_secret=client_secret, scope=scope)
+
+    return token['access_token']
+
+# Function to download a file from SharePoint
+def download_file(access_token, file_url, local_path):
+    headers = {"Authorization": f"Bearer {access_token}"}
+    response = requests.get(file_url, headers=headers)
+
+    if response.status_code == 200:
+        with open(local_path, 'wb') as file:
+            file.write(response.content)
+    else:
+        print(f"Failed to download file: {response.status_code}")
+        print(response.text)  # Add this line to see the error message from the server
+
+        #print(f"Failed to download file: {response.status_code}")
+
+# Replace with your Azure AD and SharePoint details
+client_id = 'a1dccbc1-bba2-4269-9039-a7297fd095d6'
+client_secret = 'Z6M8Q~QQ9j3kn4QOhIifo~RYjx~I~nFb65PDbcX0'
+tenant_id = '8133ead4-1b34-4a4f-aab5-2f0cdf410e8c'
+site_id = '‎https://mexiweb.sharepoint.com/sites/‎‎MF40‎'
+item_id = '1216'
+
+# SharePoint file URL (Microsoft Graph API)
+file_url = f'https://graph.microsoft.com/v1.0/sites/{site_id}/drive/items/{item_id}/content'
+
+# Local path to save the file
+local_file_path = 'downloaded_file.xlsx'
+
+# Get access token
+access_token = get_access_token(client_id, client_secret, tenant_id)
+
+# Download the file
+download_file(access_token, file_url, local_file_path)
+
+print("File downloaded successfully.")
+
+
+
+
+
 # Placeholder DataFrame
 df = pd.DataFrame({'Tambur': [], 'KG/Rola': [], 'Nr.InternRola': []})
 df_rebut = pd.DataFrame(columns=['Operator', 'ID Proiect', 'Cod Rola', 'Tip Profil', 'Lungime Profil'])
@@ -67,7 +122,6 @@ def open_excel():
             tambur_dropdown['menu'].add_command(label=option, command=tk._setit(tambur_var, option))
         tambur_dropdown.config(state="normal")
         tambur_var.trace('w', lambda *args: display_selected_data(tambur_var.get()))
-
 def save_to_excel():
     global df_rebut
 
